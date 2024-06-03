@@ -160,7 +160,7 @@ def search_for_resource_pool(content, vim_type, name, folder=None, recurse=True)
 # This was modified from vmware pyvmomi community samples
 def clone_vm(
         si: vim.ServiceInstance, template: vim.VirtualMachine, vm_name: str, datacenter_name: str, vm_folder: str, datastore_name: str,
-        cluster_name: str, resource_pool, power_on: bool, datastorecluster_name):
+        cluster_name: str, resource_pool, power_on: bool, datastorecluster_name: str):
     """
     Clone a VM from a template/VM, datacenter_name, vm_folder, datastore_name
     cluster_name, resource_pool, and power_on are all optional.
