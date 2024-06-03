@@ -26,7 +26,8 @@ print("Retrieving VM by UUID...")
 uuid = newvm.config.uuid
 datacenter = pyvmomi_tools.get_obj_by_name(si, vim.Datacenter, datacenter_name)
 test: vim.VirtualMachine = si.content.searchIndex.FindByUuid(datacenter, uuid, True)
-print("Retrieved VM!")
+ipaddress = pyvmomi_tools.wait_for_ip_address(test, 60)
+print(f"Retrieved VM with ip {ipaddress}!")
 
 # Delete VM
 print("Deleting VM...")

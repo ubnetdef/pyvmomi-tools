@@ -3,6 +3,7 @@ from pyVmomi import vim, vmodl
 import ssl
 import pyVmomi
 import pchelper
+import time
 
 # This was copied from vmware pyvmomi community samples
 def collect_properties(si, view_ref, obj_type, path_set=None,
@@ -228,3 +229,21 @@ def clone_vm(
 
     task = template.Clone(folder=destfolder, name=vm_name, spec=clonespec)
     return wait_for_task(task)
+
+def wait_for_ip_address(vm: vim.VirtualMachine, timeout_seconds: int) -> str:
+    '''
+    This retrieves the first IP that shows in VCenter.
+    
+    Not tested with multiple IPs or IPv6.
+    '''
+
+    start_time = time.time()
+
+    ip_address = None
+    out_of_time = False
+    while(ip_address == None and not out_of_time):
+        ip_address = vm.summary.guest.ipAddress
+        time.sleep(1)
+        out_of_time = time.time() >= start_time + timeout_seconds
+
+    return ip_address
