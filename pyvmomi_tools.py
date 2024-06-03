@@ -233,7 +233,8 @@ def clone_vm(
 def wait_for_ip_address(vm: vim.VirtualMachine, timeout_seconds: int) -> str:
     '''
     This retrieves the first IP that shows in VCenter.
-    
+    Returns 'None' if no IP found
+
     Not tested with multiple IPs or IPv6.
     '''
 
