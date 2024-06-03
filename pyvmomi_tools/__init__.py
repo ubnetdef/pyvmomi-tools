@@ -2,8 +2,8 @@ from pyVim.connect import SmartConnect
 from pyVmomi import vim, vmodl
 import ssl
 import pyVmomi
-import pchelper
 import time
+from pyvmomi_tools import pchelper
 
 # This was copied from vmware pyvmomi community samples
 def collect_properties(si, view_ref, obj_type, path_set=None,
@@ -248,3 +248,21 @@ def wait_for_ip_address(vm: vim.VirtualMachine, timeout_seconds: int) -> str:
         out_of_time = time.time() >= start_time + timeout_seconds
 
     return ip_address
+
+def get_vm_by_ip(si: vim.ServiceInstance, ip_address: str):
+    root_folder = si.content.rootFolder
+    view = si.content.viewManager.CreateContainerView(root_folder, [vim.VirtualMachine], True)
+    collector = si.content.propertyCollector
+    properties_to_get = ["guest.ipAddress"]
+    query_data = collect_properties(si, view, vim.VirtualMachine, properties_to_get, True)
+
+    for query in query_data:
+        vm_has_ip_address = 'guest.ipAddress' in query
+        if(vm_has_ip_address and query['guest.ipAddress'] == ip_address):
+            return query['obj']
+
+def force_delete_vm(vm: vim.VirtualMachine):
+    vm.Terminate()
+    while(vm.runtime.powerState != "poweredOff"):
+        time.sleep(1)
+    vm.Destroy()
