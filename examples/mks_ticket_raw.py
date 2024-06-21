@@ -21,8 +21,10 @@ newvm: vim.VirtualMachine = pyvmomi_tools.clone_vm(si, template, "pyvmomoi-testi
 print(f"New VM with UUID '{newvm.config.uuid}' Created!")
 
 # Retrieve MKS ticket
-consoleurl = pyvmomi_tools.get_webmks_ticket(newvm)
-print(f"ConsoleURL: {consoleurl}")
+webmks = newvm.AcquireTicket("webmks")
+print(f"WebMKS Ticket: {webmks.ticket}")
+consoleURL = f"wss://arena.ubnetdef.org/console/{webmks.host}/{webmks.ticket}"
+print(f"ConsoleURL: {consoleURL}")
 
 # Delete VM
 print("Deleting VM...")
