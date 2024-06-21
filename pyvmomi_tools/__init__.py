@@ -230,6 +230,16 @@ def clone_vm(
     task = template.Clone(folder=destfolder, name=vm_name, spec=clonespec)
     return wait_for_task(task)
 
+def get_webmks_ticket(vm: vim.VirtualMachine) -> str:
+    '''
+    Returns the URL that is used for the webmks console connection
+    '''
+
+    webmks = vm.AcquireTicket("webmks")
+    consoleURL = f"wss://arena.ubnetdef.org/console/{webmks.host}/{webmks.ticket}"
+    return consoleURL
+
+
 def wait_for_ip_address(vm: vim.VirtualMachine, timeout_seconds: int) -> str:
     '''
     This retrieves the first IP that shows in VCenter.
